@@ -6,6 +6,7 @@ import PlaceholderPage from './pages/PlaceholderPage'
 import SweetsPage from './pages/SweetsPage'
 import ProductPage from './pages/ProductPage'
 import CheckoutPage from './pages/CheckoutPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 
 
 
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-success" element={<OrderSuccessPage />} />
         <Route path="/about" element={<PlaceholderPage title="About Rohit Sweets" />} />
         <Route path="/contact" element={<PlaceholderPage title="Contact" />} />
         <Route path="*" element={<PlaceholderPage title="Page not found" />} />

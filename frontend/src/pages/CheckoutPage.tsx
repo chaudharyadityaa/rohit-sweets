@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ShoppingBag } from 'lucide-react'
 import DeliveryBandPicker from '../components/checkout/DeliveryBandPicker'
 import Field from '../components/checkout/Field'
@@ -7,7 +8,11 @@ import Container from '../components/ui/Container'
 import { Button, ButtonLink } from '../components/ui/Button'
 import { BUSINESS } from '../config/business'
 import { useCart } from '../hooks/useCart'
-import type { CheckoutField, CheckoutForm, OrderDraft } from '../types/checkout'
+import type { CheckoutField, CheckoutForm } from '../types/checkout'
+import type { PlacedOrder } from '../types/order'
+import { saveLastOrder } from '../services/lastOrder'
+import { generateTempOrderNumber } from '../utils/orderNumber'
+import { orderWhatsAppLink } from '../utils/whatsapp'
 import { buildCartLines, cartSubtotal, type CartLine } from '../utils/cart'
 import { buildOrderDraft } from '../utils/checkout'
 import { findBand } from '../utils/delivery'
@@ -62,7 +67,8 @@ function CheckoutContent({ lines }: { lines: CartLine[] }) {
   const [form, setForm] = useState<CheckoutForm>(INITIAL_FORM)
   const [touched, setTouched] = useState<Partial<Record<CheckoutField, boolean>>>({})
   const [submitted, setSubmitted] = useState(false)
-  const [draft, setDraft] = useState<OrderDraft | null>(null)
+    const navigate = useNavigate()
+  const { clearCart } = useCart()
 
   const errors = validateCheckout(form)
   const subtotal = cartSubtotal(lines)
@@ -73,7 +79,7 @@ function CheckoutContent({ lines }: { lines: CartLine[] }) {
 
   function update<K extends CheckoutField>(key: K, value: CheckoutForm[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
-    setDraft(null)
+    
   }
 
   function markTouched(field: CheckoutField) {
@@ -89,7 +95,20 @@ function CheckoutContent({ lines }: { lines: CartLine[] }) {
       document.getElementById(`field-${firstInvalid}`)?.focus()
       return
     }
-    setDraft(buildOrderDraft(form, lines))
+        const draft = buildOrderDraft(form, lines)
+    if (!draft) return
+
+    const order: PlacedOrder = {
+      orderNumber: generateTempOrderNumber(),
+      createdAt: new Date().toISOString(),
+      draft,
+    }
+
+    saveLastOrder(order)
+    // Runs inside the click handler, so browsers allow it. The success page has a fallback button.
+    window.open(orderWhatsAppLink(order), '_blank', 'noopener,noreferrer')
+    clearCart()
+    navigate('/order-success', { replace: true, state: { order } })
   }
 
   function fieldProps(field: CheckoutField) {
@@ -253,17 +272,7 @@ function CheckoutContent({ lines }: { lines: CartLine[] }) {
             PLACE ORDER
           </Button>
 
-          {/* TEMPORARY (Checkpoint 7 only): replaced by the WhatsApp flow in Checkpoint 8 */}
-          {draft && (
-            <div className="mt-4 rounded-lg border border-gold-400 bg-white p-3">
-              <p className="text-xs font-semibold text-maroon-800">
-                Form is valid. Order draft (temporary, for testing):
-              </p>
-              <pre className="mt-2 max-h-64 overflow-auto text-[11px] leading-snug">
-                {JSON.stringify(draft, null, 2)}
-              </pre>
-            </div>
-          )}
+          
         </aside>
       </form>
     </Container>
