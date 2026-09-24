@@ -3,6 +3,7 @@ import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import SweetsPage from './pages/SweetsPage'
+import ProductPage from './pages/ProductPage'
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/sweets" element={<SweetsPage />} />
+        <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<PlaceholderPage title="Your Cart" />} />
         <Route path="/about" element={<PlaceholderPage title="About Rohit Sweets" />} />
         <Route path="/contact" element={<PlaceholderPage title="Contact" />} />

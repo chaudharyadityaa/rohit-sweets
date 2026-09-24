@@ -22,3 +22,12 @@ export const DEFAULT_DELIVERY_CHARGES = [
   { fromKm: 3, toKm: 5, charge: 50 },
   { fromKm: 5, toKm: 7, charge: 70 },
 ] as const
+
+
+// Allowed order quantities, in kg. PROPOSED defaults, pending the owner's decision
+// (whole kg only, or also 1/2 kg and 1/4 kg?). `max` is only a sanity cap.
+export const QUANTITY_RULES: { min: number; step: number; max: number } = {
+  min: 1,
+  step: 1,
+  max: 20,
+}
