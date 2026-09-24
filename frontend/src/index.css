@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* Design tokens. Colours are approximated from the approved mockup
+   and can be fine-tuned in one place. */
+@theme {
+  --color-cream-50: #fffbf3;
+  --color-cream-100: #fbf3e4;
+  --color-cream-200: #f4e6cc;
+
+  --color-maroon-900: #3a0f12;
+  --color-maroon-800: #5a1216;
+  --color-maroon-700: #7a1620;
+
+  --color-gold-400: #c9a05a;
+  --color-gold-500: #b8893b;
+  --color-gold-600: #8f6a2b;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream-50 font-sans text-maroon-900 antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-display;
+  }
+}
