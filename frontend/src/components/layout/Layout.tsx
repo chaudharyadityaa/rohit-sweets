@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import Footer from './Footer'
 import Navbar from './Navbar'
 
 export default function Layout() {
@@ -8,7 +9,7 @@ export default function Layout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      {/* Footer is added with the homepage in Checkpoint 3 */}
+      <Footer />
     </div>
   )
 }
