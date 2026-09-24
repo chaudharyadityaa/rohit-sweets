@@ -1,4 +1,6 @@
 import { GHEWAR_ID, products } from '../../data/products'
+import { useAddToCart } from '../../hooks/useAddToCart'
+import type { Product } from '../../types/product'
 import { addButtonLabel, isOrderable, priceLabel } from '../../utils/product'
 import ImagePlaceholder from '../ui/ImagePlaceholder'
 import { Button } from '../ui/Button'
@@ -6,6 +8,11 @@ import { Button } from '../ui/Button'
 export default function FeaturedGhewar() {
   const ghewar = products.find((p) => p.id === GHEWAR_ID)
   if (!ghewar) return null
+  return <GhewarBlock ghewar={ghewar} />
+}
+
+function GhewarBlock({ ghewar }: { ghewar: Product }) {
+  const { add, added } = useAddToCart(ghewar)
 
   return (
     <section
@@ -31,9 +38,11 @@ export default function FeaturedGhewar() {
           </p>
           <Button
             disabled={!isOrderable(ghewar)}
+            onClick={() => add()}
+            aria-live="polite"
             className="mt-4"
           >
-            {addButtonLabel(ghewar)}
+            {added ? 'ADDED ✓' : addButtonLabel(ghewar)}
           </Button>
         </div>
         <ImagePlaceholder

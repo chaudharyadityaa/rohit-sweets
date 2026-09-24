@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useAddToCart } from '../../hooks/useAddToCart'
 import type { Product } from '../../types/product'
 import { addButtonLabel, isOrderable, priceLabel } from '../../utils/product'
 import ImagePlaceholder from '../ui/ImagePlaceholder'
@@ -6,16 +7,12 @@ import { Button } from '../ui/Button'
 
 type ProductCardProps = {
   product: Product
-  onAddToCart?: (product: Product) => void
   className?: string
 }
 
-export default function ProductCard({
-  product,
-  onAddToCart,
-  className = '',
-}: ProductCardProps) {
+export default function ProductCard({ product, className = '' }: ProductCardProps) {
   const orderable = isOrderable(product)
+  const { add, added } = useAddToCart(product)
   const href = `/product/${product.id}`
 
   return (
@@ -46,10 +43,11 @@ export default function ProductCard({
         variant="outline"
         size="sm"
         disabled={!orderable}
-        onClick={() => onAddToCart?.(product)}
+        onClick={() => add()}
+        aria-live="polite"
         className="mt-3 w-full text-[11px]"
       >
-        {addButtonLabel(product)}
+        {added ? 'ADDED ✓' : addButtonLabel(product)}
       </Button>
     </article>
   )

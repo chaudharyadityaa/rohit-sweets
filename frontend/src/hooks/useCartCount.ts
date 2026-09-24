@@ -1,3 +1,5 @@
+import { useCart } from './useCart'
+
 export function useCartCount(): number {
-  return 0
+  return useCart().itemCount
 }

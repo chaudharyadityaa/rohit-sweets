@@ -10,6 +10,7 @@ import { BUSINESS, QUANTITY_RULES } from '../config/business'
 import { products } from '../data/products'
 import type { Product } from '../types/product'
 import { addButtonLabel, formatPrice, isOrderable, priceLabel } from '../utils/product'
+import { useAddToCart } from '../hooks/useAddToCart'
 
 export default function ProductPage() {
   const { id } = useParams()
@@ -42,6 +43,8 @@ export default function ProductPage() {
 function ProductDetails({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState<number>(QUANTITY_RULES.min)
   const orderable = isOrderable(product)
+
+    const { add, added } = useAddToCart(product)
 
   const related = products
     .filter((p) => p.category === product.category && p.id !== product.id)
@@ -92,8 +95,20 @@ function ProductDetails({ product }: { product: Product }) {
                   {formatPrice(product.price! * quantity)}
                 </span>
               </p>
-              {/* Wired to the real cart in Checkpoint 6 */}
-              <Button className="w-full sm:w-auto">{addButtonLabel(product)}</Button>
+                            <div className="flex flex-wrap items-center gap-4">
+                <Button
+                  onClick={() => add(quantity)}
+                  aria-live="polite"
+                  className="w-full sm:w-auto"
+                >
+                  {added ? 'ADDED ✓' : addButtonLabel(product)}
+                </Button>
+                {added && (
+                  <Link to="/cart" className="text-sm font-medium text-maroon-800 underline">
+                    View cart
+                  </Link>
+                )}
+              </div>
             </div>
           ) : (
             <div className="mt-6">
