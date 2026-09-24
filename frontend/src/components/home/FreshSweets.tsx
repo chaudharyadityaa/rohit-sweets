@@ -1,0 +1,40 @@
+import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { GHEWAR_ID, products } from '../../data/products'
+import ProductCard from '../product/ProductCard'
+
+export default function FreshSweets() {
+  const items = products
+    .filter((p) => p.featured && p.id !== GHEWAR_ID)
+    .slice(0, 5)
+
+  return (
+    <section aria-labelledby="fresh-heading">
+      <div className="mb-4 flex items-center justify-between">
+        <h2
+          id="fresh-heading"
+          className="text-sm font-bold uppercase tracking-wide text-maroon-800"
+        >
+          Fresh from Rohit Sweets
+        </h2>
+        <Link
+          to="/sweets"
+          className="flex items-center gap-1 text-sm font-medium text-maroon-800 hover:underline"
+        >
+          View All <ArrowRight size={16} aria-hidden />
+        </Link>
+      </div>
+
+      {/* Mobile: swipeable row. Desktop: 5-column grid. */}
+      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
+        {items.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            className="w-40 shrink-0 snap-start lg:w-auto"
+          />
+        ))}
+      </div>
+    </section>
+  )
+}

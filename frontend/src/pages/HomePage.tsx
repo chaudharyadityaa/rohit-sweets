@@ -1,4 +1,7 @@
+import Container from '../components/ui/Container'
 import DeliveryBanner from '../components/home/DeliveryBanner'
+import FeaturedGhewar from '../components/home/FeaturedGhewar'
+import FreshSweets from '../components/home/FreshSweets'
 import HeroSection from '../components/home/HeroSection'
 
 export default function HomePage() {
@@ -6,7 +9,11 @@ export default function HomePage() {
     <>
       <HeroSection />
       <DeliveryBanner />
-      {/* Next: featured Ghewar + popular sweets (3B), then the remaining sections (3C) */}
+      <Container className="space-y-8 py-6 md:py-10">
+        <FeaturedGhewar />
+        <FreshSweets />
+      </Container>
+      {/* Next (3C): Why Rohit Sweets, How it works, About, Find us, Footer */}
     </>
   )
 }
