@@ -59,6 +59,17 @@ public class Product {
         // required by JPA
     }
 
+    public Product(String name, String description, BigDecimal price, String unit,
+                    String imageUrl, String category, boolean featured) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.unit = (unit == null || unit.isBlank()) ? "kg" : unit;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.featured = featured;
+    }
+
     @PrePersist
     void onCreate() {
         Instant now = Instant.now();
@@ -83,4 +94,14 @@ public class Product {
     public boolean isActive() { return active; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public void setUnit(String unit) { this.unit = unit; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setCategory(String category) { this.category = category; }
+    public void setAvailable(boolean available) { this.available = available; }
+    public void setFeatured(boolean featured) { this.featured = featured; }
+    public void setActive(boolean active) { this.active = active; }
 }
