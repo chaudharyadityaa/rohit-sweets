@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.rohitsweets.product.ProductNotFoundException;
 
+import com.rohitsweets.order.InvalidOrderException;
+import com.rohitsweets.order.OrderNotFoundException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -26,5 +29,18 @@ public class GlobalExceptionHandler {
                 .toList();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiError.of(400, "Bad Request", "Validation failed", issues));
+    }
+    
+    
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiError> handleOrderNotFound(OrderNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiError.of(404, "Not Found", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidOrderException.class)
+    public ResponseEntity<ApiError> handleInvalidOrder(InvalidOrderException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiError.of(400, "Bad Request", ex.getMessage()));
     }
 }
