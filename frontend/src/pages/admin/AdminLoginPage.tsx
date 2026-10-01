@@ -53,6 +53,9 @@ export default function AdminLoginPage() {
               id="username"
               type="text"
               autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}

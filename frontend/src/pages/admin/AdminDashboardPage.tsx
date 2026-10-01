@@ -5,6 +5,7 @@ import { ApiError } from '../../services/apiClient'
 import type { AdminOrder } from '../../types/admin'
 import { countByStatus, todaysOrders, todaysSales } from '../../utils/adminOrders'
 import { formatPrice } from '../../utils/product'
+import ScrollHintTable from '../../components/admin/ScrollHintTable'
 
 type LoadState = 'loading' | 'ready' | 'error'
 
@@ -75,7 +76,7 @@ export default function AdminDashboardPage() {
         {orders.length === 0 ? (
           <p className="mt-3 text-sm text-maroon-900/60">No orders yet.</p>
         ) : (
-          <div className="mt-3 overflow-x-auto rounded-2xl border border-cream-200 bg-white">
+          <ScrollHintTable>
             <table className="w-full text-left text-sm">
               <thead className="border-b border-cream-200 text-xs uppercase text-maroon-900/60">
                 <tr>
@@ -104,7 +105,7 @@ export default function AdminDashboardPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollHintTable>
         )}
       </section>
     </div>

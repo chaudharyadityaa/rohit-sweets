@@ -18,7 +18,10 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-cream-200 bg-cream-50/95 backdrop-blur">
+        <header
+      className="sticky z-50 border-b border-cream-200 bg-cream-50/95 backdrop-blur"
+      style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <Container className="flex h-16 items-center justify-between md:h-20">
         {/* Wordmark. Replace with the owner's logo when provided. */}
         <Link to="/" onClick={closeMenu} className="leading-tight">
@@ -61,9 +64,9 @@ export default function Navbar() {
             className="relative rounded-full p-2 text-maroon-800 transition hover:bg-cream-100"
           >
             <ShoppingCart size={22} />
-            <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-maroon-800 px-1 text-[10px] font-semibold text-cream-50">
-              {cartCount}
-            </span>
+              <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-maroon-800 px-1 text-[10px] font-semibold text-cream-50">
+                {cartCount}
+              </span>
           </Link>
 
           <button

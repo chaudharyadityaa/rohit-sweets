@@ -7,6 +7,7 @@ import { fetchAdminOrders, updateOrderStatus } from '../../services/adminOrdersA
 import { ApiError } from '../../services/apiClient'
 import type { AdminOrder, OrderStatus } from '../../types/admin'
 import { formatPrice } from '../../utils/product'
+import ScrollHintTable from '../../components/admin/ScrollHintTable'
 
 type StatusFilter = OrderStatus | 'ALL'
 
