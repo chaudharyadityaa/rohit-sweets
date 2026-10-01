@@ -1,13 +1,19 @@
-import { GHEWAR_ID, products } from '../../data/products'
 import { useAddToCart } from '../../hooks/useAddToCart'
+import { useProducts } from '../../hooks/useProducts'
 import type { Product } from '../../types/product'
 import { addButtonLabel, isOrderable, priceLabel } from '../../utils/product'
 import ImagePlaceholder from '../ui/ImagePlaceholder'
 import { Button } from '../ui/Button'
 
 export default function FeaturedGhewar() {
-  const ghewar = products.find((p) => p.id === GHEWAR_ID)
+  const { products, isLoading } = useProducts()
+  const ghewar = products.find((p) => p.name.toLowerCase() === 'ghewar')
+
+  if (isLoading) {
+    return <div className="h-48 animate-pulse rounded-2xl bg-cream-100" aria-hidden />
+  }
   if (!ghewar) return null
+
   return <GhewarBlock ghewar={ghewar} />
 }
 

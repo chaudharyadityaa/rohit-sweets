@@ -7,20 +7,41 @@ import Container from '../components/ui/Container'
 import ImagePlaceholder from '../components/ui/ImagePlaceholder'
 import { Button, ButtonLink } from '../components/ui/Button'
 import { BUSINESS, QUANTITY_RULES } from '../config/business'
-import { products } from '../data/products'
+import { useAddToCart } from '../hooks/useAddToCart'
+import { useProducts } from '../hooks/useProducts'
 import type { Product } from '../types/product'
 import { addButtonLabel, formatPrice, isOrderable, priceLabel } from '../utils/product'
-import { useAddToCart } from '../hooks/useAddToCart'
 
 export default function ProductPage() {
   const { id } = useParams()
+  const { products, isLoading, error } = useProducts()
   const product = products.find((p) => p.id === Number(id))
 
   useEffect(() => {
     document.title = product
       ? `${product.name} | ${BUSINESS.name}, Baraut`
-      : `Sweet not found | ${BUSINESS.name}`
+      : `Sweets | ${BUSINESS.name}`
   }, [product])
+
+  if (isLoading) {
+    return (
+      <Container className="py-10">
+        <div className="h-96 animate-pulse rounded-2xl bg-cream-100" aria-hidden />
+      </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <Container className="py-20 text-center">
+        <h1 className="text-3xl font-bold text-maroon-800">Could not load this sweet</h1>
+        <p className="mt-3 text-maroon-900/70">{error}</p>
+        <ButtonLink to="/sweets" variant="outline" className="mt-6">
+          Browse all sweets
+        </ButtonLink>
+      </Container>
+    )
+  }
 
   if (!product) {
     return (
@@ -36,17 +57,21 @@ export default function ProductPage() {
     )
   }
 
-  // `key` resets the selected quantity when moving between products.
-  return <ProductDetails key={product.id} product={product} />
+  return <ProductDetails key={product.id} product={product} allProducts={products} />
 }
 
-function ProductDetails({ product }: { product: Product }) {
+function ProductDetails({
+  product,
+  allProducts,
+}: {
+  product: Product
+  allProducts: Product[]
+}) {
   const [quantity, setQuantity] = useState<number>(QUANTITY_RULES.min)
   const orderable = isOrderable(product)
+  const { add, added } = useAddToCart(product)
 
-    const { add, added } = useAddToCart(product)
-
-  const related = products
+  const related = allProducts
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4)
 
@@ -95,7 +120,7 @@ function ProductDetails({ product }: { product: Product }) {
                   {formatPrice(product.price! * quantity)}
                 </span>
               </p>
-                            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <Button
                   onClick={() => add(quantity)}
                   aria-live="polite"

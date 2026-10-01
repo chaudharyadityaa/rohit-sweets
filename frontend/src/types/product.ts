@@ -1,10 +1,5 @@
-export type ProductCategory =
-  | 'Ghewar'
-  | 'Barfi'
-  | 'Ladoo'
-  | 'Milk Sweets'
-  | 'Syrup Sweets'
-  | 'Other'
+/** Categories are free text on the backend (Checkpoint 11); this is now just a string. */
+export type ProductCategory = string
 
 export type Product = {
   id: number

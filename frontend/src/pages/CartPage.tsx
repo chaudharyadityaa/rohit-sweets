@@ -7,10 +7,12 @@ import { Button, ButtonLink } from '../components/ui/Button'
 import { useCart } from '../hooks/useCart'
 import { buildCartLines, cartSubtotal } from '../utils/cart'
 import { formatPrice, priceLabel } from '../utils/product'
+import { useProducts } from '../hooks/useProducts'
 
 export default function CartPage() {
-  const { items, setQuantity, removeItem, clearCart } = useCart()
-  const lines = buildCartLines(items)
+    const { items, setQuantity, removeItem, clearCart } = useCart()
+  const { products } = useProducts()
+  const lines = buildCartLines(items, products)
   const subtotal = cartSubtotal(lines)
   const hasProblem = lines.some((line) => !line.orderable)
 

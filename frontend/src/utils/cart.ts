@@ -1,4 +1,3 @@
-import { products } from '../data/products'
 import type { CartItem } from '../types/cart'
 import type { Product } from '../types/product'
 import { isOrderable } from './product'
@@ -7,12 +6,11 @@ export type CartLine = {
   product: Product
   quantity: number
   lineTotal: number
-  /** false if the product became unavailable or lost its price after being added */
   orderable: boolean
 }
 
-/** Joins stored cart items with current product data. Prices always come from here. */
-export function buildCartLines(items: CartItem[]): CartLine[] {
+/** Joins stored cart items with live product data. Prices always come from `products`. */
+export function buildCartLines(items: CartItem[], products: Product[]): CartLine[] {
   return items.flatMap((item) => {
     const product = products.find((p) => p.id === item.productId)
     if (!product) return []

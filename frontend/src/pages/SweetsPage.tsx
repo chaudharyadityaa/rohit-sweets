@@ -5,16 +5,20 @@ import ProductCard from '../components/product/ProductCard'
 import SearchBox from '../components/product/SearchBox'
 import Container from '../components/ui/Container'
 import { Button } from '../components/ui/Button'
-import { CATEGORIES } from '../data/categories'
-import { products } from '../data/products'
+import { useProducts } from '../hooks/useProducts'
 
 export default function SweetsPage() {
   const [params, setParams] = useSearchParams()
+  const { products, isLoading, error, reload } = useProducts()
 
   const query = params.get('q') ?? ''
   const rawCategory = params.get('category')
-  const category: CategoryFilter =
-    CATEGORIES.find((c) => c === rawCategory) ?? 'All'
+
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((p) => p.category))).sort(),
+    [products],
+  )
+  const category: CategoryFilter = categories.includes(rawCategory ?? '') ? rawCategory! : 'All'
 
   function updateParam(key: 'q' | 'category', value: string) {
     const next = new URLSearchParams(params)
@@ -30,7 +34,7 @@ export default function SweetsPage() {
         (category === 'All' || p.category === category) &&
         p.name.toLowerCase().includes(needle),
     )
-  }, [category, query])
+  }, [products, category, query])
 
   const hasUnpriced = products.some((p) => p.price === null)
 
@@ -43,43 +47,70 @@ export default function SweetsPage() {
         </p>
       </header>
 
-      {hasUnpriced && (
+      {error && (
+        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p>{error}</p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={reload}>
+            Try again
+          </Button>
+        </div>
+      )}
+
+      {!error && hasUnpriced && (
         <p className="mt-5 rounded-xl border border-gold-400/50 bg-cream-100 px-4 py-3 text-sm text-maroon-900/80">
           Prices are being finalised. Sweets marked “Price coming soon” can’t be
           ordered online yet. Call us to ask about them.
         </p>
       )}
 
-      <div className="mt-6 space-y-4">
-        <SearchBox value={query} onChange={(v) => updateParam('q', v)} />
-        <CategoryTabs active={category} onChange={(c) => updateParam('category', c)} />
-      </div>
+      {!error && (
+        <>
+          <div className="mt-6 space-y-4">
+            <SearchBox value={query} onChange={(v) => updateParam('q', v)} />
+            <CategoryTabs
+              active={category}
+              categories={categories}
+              onChange={(c) => updateParam('category', c)}
+            />
+          </div>
 
-      <p className="mt-6 text-sm text-maroon-900/60" aria-live="polite">
-        {visible.length} {visible.length === 1 ? 'sweet' : 'sweets'}
-      </p>
+          {isLoading ? (
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="h-56 animate-pulse rounded-2xl bg-cream-100" aria-hidden />
+              ))}
+            </div>
+          ) : (
+            <>
+              <p className="mt-6 text-sm text-maroon-900/60" aria-live="polite">
+                {visible.length} {visible.length === 1 ? 'sweet' : 'sweets'}
+              </p>
 
-      {visible.length > 0 ? (
-        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
-          {visible.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <div className="mt-3 rounded-2xl border border-dashed border-cream-200 py-14 text-center">
-          <p className="font-semibold text-maroon-800">No sweets found</p>
-          <p className="mt-1 text-sm text-maroon-900/70">
-            Try a different name or category.
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-4"
-            onClick={() => setParams({}, { replace: true })}
-          >
-            Clear filters
-          </Button>
-        </div>
+              {visible.length > 0 ? (
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
+                  {visible.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 rounded-2xl border border-dashed border-cream-200 py-14 text-center">
+                  <p className="font-semibold text-maroon-800">No sweets found</p>
+                  <p className="mt-1 text-sm text-maroon-900/70">
+                    Try a different name or category.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => setParams({}, { replace: true })}
+                  >
+                    Clear filters
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </>
       )}
     </Container>
   )

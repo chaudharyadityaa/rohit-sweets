@@ -1,12 +1,11 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { GHEWAR_ID, products } from '../../data/products'
+import { useProducts } from '../../hooks/useProducts'
 import ProductCard from '../product/ProductCard'
 
 export default function FreshSweets() {
-  const items = products
-    .filter((p) => p.featured && p.id !== GHEWAR_ID)
-    .slice(0, 5)
+  const { products, isLoading } = useProducts()
+  const items = products.filter((p) => p.featured).slice(0, 5)
 
   return (
     <section aria-labelledby="fresh-heading">
@@ -25,16 +24,23 @@ export default function FreshSweets() {
         </Link>
       </div>
 
-      {/* Mobile: swipeable row. Desktop: 5-column grid. */}
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
-        {items.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            className="w-40 shrink-0 snap-start lg:w-auto"
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-48 animate-pulse rounded-2xl bg-cream-100" aria-hidden />
+          ))}
+        </div>
+      ) : (
+        <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
+          {items.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              className="w-40 shrink-0 snap-start lg:w-auto"
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }

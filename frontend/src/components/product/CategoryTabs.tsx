@@ -1,23 +1,21 @@
-import type { ProductCategory } from '../../types/product'
-import { CATEGORIES } from '../../data/categories'
-
-export type CategoryFilter = ProductCategory | 'All'
+export type CategoryFilter = string
 
 type CategoryTabsProps = {
   active: CategoryFilter
+  categories: string[]
   onChange: (category: CategoryFilter) => void
 }
 
-const OPTIONS: CategoryFilter[] = ['All', ...CATEGORIES]
+export default function CategoryTabs({ active, categories, onChange }: CategoryTabsProps) {
+  const options: CategoryFilter[] = ['All', ...categories]
 
-export default function CategoryTabs({ active, onChange }: CategoryTabsProps) {
   return (
     <div
       role="group"
       aria-label="Filter by category"
       className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
     >
-      {OPTIONS.map((option) => {
+      {options.map((option) => {
         const isActive = option === active
         return (
           <button

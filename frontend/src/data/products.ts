@@ -21,6 +21,7 @@ function make(
     category,
     available: true,
     featured: options.featured ?? false,
+    active: true,
     createdAt: STAMP,
     updatedAt: STAMP,
   }
