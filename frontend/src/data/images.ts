@@ -2,6 +2,6 @@
 // When the owner provides a photo:
 //   1. put it in src/assets/  (e.g. src/assets/hero-ghewar.jpg)
 //   2. import it here and export it, e.g.
-//        import heroGhewar from '../assets/hero-ghewar.jpg'
-//        export const HERO_IMAGE: string | null = heroGhewar
-export const HERO_IMAGE: string | null = null
+import heroGhewar from '../assets/hero-ghewar.jpg'
+export const HERO_IMAGE: string | null = heroGhewar
+// export const HERO_IMAGE: string | null = null
