@@ -36,8 +36,14 @@ public class ProductController {
     @GetMapping
     public List<ProductResponse> list(
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String q
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false, defaultValue = "false") boolean includeInactive,
+            org.springframework.security.core.Authentication authentication
     ) {
+        boolean isAdmin = authentication != null && authentication.isAuthenticated();
+        if (includeInactive && isAdmin) {
+            return service.findAllForAdmin().stream().map(ProductResponse::from).toList();
+        }
         return service.findVisible(category, q).stream()
                 .map(ProductResponse::from)
                 .toList();
@@ -73,5 +79,10 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.softDelete(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @PatchMapping("/{id}/reactivate")
+    public ProductResponse reactivate(@PathVariable Long id) {
+        return ProductResponse.from(service.reactivate(id));
     }
 }

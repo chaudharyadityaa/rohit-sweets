@@ -14,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByActiveTrueAndCategoryIgnoreCaseAndNameContainingIgnoreCaseOrderByIdAsc(
             String category, String namePart);
+    
+    List<Product> findAllByOrderByIdAsc();
 }

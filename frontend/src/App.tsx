@@ -11,6 +11,7 @@ import ProtectedRoute from './components/admin/ProtectedRoute'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminLoginPage from './pages/admin/AdminLoginPage'
 import AdminDashboardPage from './pages/admin/AdminDashboardPage'
+import AdminProductsPage from './pages/admin/AdminProductsPage'
 
 
 
@@ -33,7 +34,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
-          </Route>
+              <Route path="/admin/products" element={<AdminProductsPage />} />
+            </Route>
         </Route>
     </Routes>
   )

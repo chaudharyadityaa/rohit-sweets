@@ -41,6 +41,11 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
         return product;
     }
+    
+    @Transactional(readOnly = true)
+    public List<Product> findAllForAdmin() {
+        return repository.findAllByOrderByIdAsc();
+    }
 
     @Transactional
     public Product create(ProductRequest request) {
@@ -89,5 +94,13 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
         product.setActive(false);
         repository.save(product);
+    }
+    
+    @Transactional
+    public Product reactivate(Long id) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        product.setActive(true);
+        return repository.save(product);
     }
 }

@@ -15,13 +15,14 @@ public record ProductResponse(
         String category,
         boolean available,
         boolean featured,
+        boolean active,
         Instant createdAt,
         Instant updatedAt
 ) {
     public static ProductResponse from(Product p) {
         return new ProductResponse(
                 p.getId(), p.getName(), p.getDescription(), p.getPrice(), p.getUnit(),
-                p.getImageUrl(), p.getCategory(), p.isAvailable(), p.isFeatured(),
+                p.getImageUrl(), p.getCategory(), p.isAvailable(), p.isFeatured(), p.isActive(),
                 p.getCreatedAt(), p.getUpdatedAt()
         );
     }

@@ -13,6 +13,8 @@ import com.rohitsweets.product.ProductNotFoundException;
 import com.rohitsweets.order.InvalidOrderException;
 import com.rohitsweets.order.OrderNotFoundException;
 
+import org.springframework.security.authentication.BadCredentialsException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -42,5 +44,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleInvalidOrder(InvalidOrderException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiError.of(400, "Bad Request", ex.getMessage()));
+    }
+    
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiError.of(401, "Unauthorized", ex.getMessage()));
     }
 }

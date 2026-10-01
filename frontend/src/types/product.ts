@@ -10,12 +10,13 @@ export type Product = {
   id: number
   name: string
   description: string | null
-  price: number | null // null = owner has not confirmed a price yet
+  price: number | null
   unit: 'kg'
-  image: string | null // null = show placeholder
+  image: string | null
   category: ProductCategory
   available: boolean
   featured: boolean
+  active: boolean
   createdAt: string
   updatedAt: string
 }
