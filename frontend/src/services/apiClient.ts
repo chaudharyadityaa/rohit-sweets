@@ -1,4 +1,10 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+if (import.meta.env.DEV && !API_BASE_URL.startsWith('http://localhost')) {
+  console.warn(
+    `apiClient: VITE_API_BASE_URL is "${API_BASE_URL}" in development — ` +
+    'confirm this is intentional before sending requests (including the admin token) to it.',
+  )
+}
 const TOKEN_STORAGE_KEY = 'rohit-sweets-admin-token'
 
 export class ApiError extends Error {
